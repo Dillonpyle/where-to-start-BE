@@ -1,9 +1,10 @@
-const mongoose = require ('mongose')
+const mongoose = require ('mongoose')
+const ArtistList = require('./artistlist')
 
 const userSchema = new mongoose.Schema({
 	username: String,
 	password: String,
-	artistlists: [ArtistList.Schema],
+	artistlists: [ArtistList.schema],
 	photo: String,
 })
 

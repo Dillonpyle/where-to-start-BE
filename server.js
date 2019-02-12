@@ -25,10 +25,20 @@ app.use(bodyParser.json());
 /************* SET UP CORS ***************/
 const corsOptions = {
 	origin: 'http://localhost:3000',
-	credenbtials: true,
+	credentials: true,
 	optionsSuccessStatus: 200
 }
 app.use(cors(corsOptions))
+
+/************* CONTROLLERS ***************/
+const artistListController = require('./controllers/artistListController')
+app.use('/api/v1/artist-list', artistListController);
+
+// const artistcontroller = require('./controllers/artistConroller')
+// app.use('/api/v1/artist')
+
+const authController = require('./controllers/authController')
+app.use('/auth', authController)
 
 
 

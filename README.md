@@ -6,36 +6,37 @@
 
 View List
 
-Add Artist to a List
+Add a new list
 
-Delete Artist from a list
+Delete a List
+
+Edit list
+	Add Artist to a List
+	Change Name of List
+  Delete Artist from a list
 
 ### User
 
 Add a User
 
-Edit User's Name or Info
-
 View User's Page
+
+Edit User's Name or Info
 
 Delete User
 
 Display User's Lists
 
-Edit Name of lists
 
-Add a new list
-
-Delete a List
 
 ### Playlist
 
 Display Playlist
 
-Save Playlist
+Add Playlist
 
 Edit Playlist
 
-Delte Playlist
+Delet Playlist
 
 
