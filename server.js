@@ -23,12 +23,15 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 /************* SET UP CORS ***************/
+
+
 const corsOptions = {
 	origin: 'http://localhost:3000',
 	credentials: true,
 	optionsSuccessStatus: 200
 }
 app.use(cors(corsOptions))
+
 
 /************* CONTROLLERS ***************/
 const artistListController = require('./controllers/artistListController')
