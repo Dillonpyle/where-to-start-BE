@@ -34,11 +34,11 @@ app.use(cors(corsOptions))
 const artistListController = require('./controllers/artistListController')
 app.use('/api/v1/artist-list', artistListController);
 
-// const artistcontroller = require('./controllers/artistConroller')
-// app.use('/api/v1/artist')
+const artistController = require('./controllers/artistController')
+app.use('/api/v1/artist', artistController)
 
 const authController = require('./controllers/authController')
-app.use('/auth', authController)
+app.use('/authentication', authController)
 
 
 
