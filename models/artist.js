@@ -1,7 +1,7 @@
 const mongoose = require ('mongoose')
 
 const artistSchema = new mongoose.Schema({
-	foundArtist: String,
+	artistName: String,
 	mbid: String,
 	topAlbum: String,
 	topAlbumImg: String,

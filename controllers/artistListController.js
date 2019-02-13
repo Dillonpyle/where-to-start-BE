@@ -47,46 +47,49 @@ router.delete('/:listId', async (req, res) => {
 
 // Add Artist to a List
 router.put('/:listId', async (req, res) => {
-	try {
-		// 	// query api for artist
-		// const responseInfo = await fetch(`http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&mbid=${req.params.artistId}&api_key=${API_KEY}&format=json`)
-		// if (!responseInfo.ok) {
-		// 	throw Error(response.statusText)
-		// }
-		// const parsedResponseInfo = await responseInfo.json()
-		// console.log(parsedResponseInfo);
-
-		console.log(req.body);
-			
+	try {		
 		// find list it's being added to
 		const foundList = await ArtistList.findOne({ _id: req.params.listId })
 			
 		// search db for artist by that id
-		console.log(req.body.mbid, 'artistId');
-		console.log(req.params.listId, 'listId');
 		const foundArtist = await Artist.findOne({mbid: req.body.mbid})
+
+		// if foundList already has artist of artist.name, don't add
+		console.log('foundArtist\n', foundArtist );
+		console.log('foundList\n', foundList);
 
 			// if artists doesn't exist yet, create artist,
 		if (!foundArtist) {
 			const createdArtist = await Artist.create(req.body) //or something like that
-			
-			// push artist into that list
-			foundList.artists.push(createdArtist)
-			await foundList.save()
-			//send response
-			res.json({
-				status: 200,
-				data: foundList
-			})
-		} else {
-			foundList.artists.push(foundArtist)
-			await foundList.save()
-			res.json({
-				status: 200,
-				data: foundList
-			})
-		}
+			console.log('createdArtist\n', createdArtist);
 
+				// push artist into that list
+				foundList.artists.push(createdArtist)
+				await foundList.save()
+				//send response
+				res.json({
+					status: 200,
+					data: foundList
+				})
+
+		} else {
+			// check for duplicates
+			const artistAlreadyInList = foundList.artists.find((artist) => artist.mbid === foundArtist.mbid)
+			if (artistAlreadyInList) {
+				res.json({
+					status: 200,
+					data: foundList
+				})
+			} else {
+				// push artist into list if no duplicates found
+				foundList.artists.push(foundArtist)
+				await foundList.save()
+				res.json({
+					status: 200,
+					data: foundList
+				})
+			}
+		}
 	} catch (err) {
 		console.log(err)
 	}
@@ -128,7 +131,15 @@ router.put('/:listId', async (req, res) => {
 	}
 })
 
-
+		// probably don't need this
+		
+		// 	// query api for artist
+		// const responseInfo = await fetch(`http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&mbid=${req.params.artistId}&api_key=${API_KEY}&format=json`)
+		// if (!responseInfo.ok) {
+		// 	throw Error(response.statusText)
+		// }
+		// const parsedResponseInfo = await responseInfo.json()
+		// console.log(parsedResponseInfo);
 
 
 
