@@ -64,20 +64,20 @@ router.put('/:listId/:artistId', async (req, res) => {
 		} 
 
 			// find list it's being added to
-		const foundList = await Artistlist.findOne({mbid: req.params.listId})
+		const foundList = await Artistlist.findOne({ _id: req.params.listId })
 
 			// push artist into that list
 		if (createdArtist) {
-			foundlist.push(createdArtist)
+			foundList.push(createdArtist)
 			res.json({
 				status: 200,
-				data: createdArtist
+				data: foundList
 			})
 		} else {
 			foundList.push(foundArtist)
 			res.json({
 				status: 200,
-				data: foundArtist
+				data: foundList
 			})
 		}
 
@@ -87,9 +87,22 @@ router.put('/:listId/:artistId', async (req, res) => {
 })
 
 // Delete Artist from a list
-router.put('/:listId/:artistId/delete', (req, res) => {
+router.put('/:listId/:artistId/delete', async (req, res) => {
 	try {
-		
+		// Search DB for list Id
+		const foundList = await ArtistList.findOne({ _id: req.params.listId })
+
+		// Find Artist by mbid in list's artist array
+		const indexOfArtist = foundList.artists.findIndex(artist => artist.mbid === req.params.artistId)
+
+		// splice Artist from that list 
+		const updatedList = foundList.splice(indexOfArtist, 1)
+
+		// return updated list
+		res.json({
+			status: 200,
+			data: updatedList
+		})
 	} catch (err) {
 		console.log(err)
 	}
