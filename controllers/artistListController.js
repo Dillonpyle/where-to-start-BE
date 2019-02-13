@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
 // Create a new list
 router.post('/', async (req, res) => {
 	try {
-		console.log('this is req.body\n', req.body);
+		//console.log('this is req.body\n', req.body);
 		const createdList = await ArtistList.create(req.body);
 		res.json({
       status: 200,
@@ -55,13 +55,13 @@ router.put('/:listId', async (req, res) => {
 		const foundArtist = await Artist.findOne({mbid: req.body.mbid})
 
 		// if foundList already has artist of artist.name, don't add
-		console.log('foundArtist\n', foundArtist );
-		console.log('foundList\n', foundList);
+		// console.log('foundArtist\n', foundArtist );
+		// console.log('foundList\n', foundList);
 
 			// if artists doesn't exist yet, create artist,
 		if (!foundArtist) {
 			const createdArtist = await Artist.create(req.body) //or something like that
-			console.log('createdArtist\n', createdArtist);
+			//console.log('createdArtist\n', createdArtist);
 
 				// push artist into that list
 				foundList.artists.push(createdArtist)
@@ -100,17 +100,20 @@ router.put('/:listId/:artistId/delete', async (req, res) => {
 	try {
 		// Search DB for list Id
 		const foundList = await ArtistList.findOne({ _id: req.params.listId })
+		console.log('\nfoundList\n', foundList);
 
 		// Find Artist by mbid in list's artist array
 		const indexOfArtist = foundList.artists.findIndex(artist => artist.mbid === req.params.artistId)
 
 		// splice Artist from that list 
-		const updatedList = foundList.splice(indexOfArtist, 1)
+		foundList.artists.splice(indexOfArtist, 1)
+		console.log('\nfoundList.artists\n', foundList.artists);
+		await foundList.save()
 
 		// return updated list
 		res.json({
 			status: 200,
-			data: updatedList
+			data: foundList
 		})
 	} catch (err) {
 		console.log(err)
