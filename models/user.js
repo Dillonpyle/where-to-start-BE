@@ -1,5 +1,5 @@
 const mongoose = require ('mongoose')
-const ArtistList = require('./artistlist')
+const ArtistList = require('./artistList')
 
 const userSchema = new mongoose.Schema({
 	username: String,
