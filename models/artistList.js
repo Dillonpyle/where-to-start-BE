@@ -1,9 +1,10 @@
 const mongoose = require ('mongoose')
+const Artist   = require ('./artist')
 
 const artistListSchema = new mongoose.Schema({
 	userId: String,
 	name: String,
-	artists: [String]
+	artists: [Artist.schema]
 })
 
 const ArtistList = new mongoose.model('ArtistList', artistListSchema);

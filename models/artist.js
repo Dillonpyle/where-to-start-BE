@@ -1,12 +1,19 @@
 const mongoose = require ('mongoose')
 
 const artistSchema = new mongoose.Schema({
-	name: String,
+	foundArtist: String,
 	mbid: String,
-	summary: String,
+	topAlbum: String,
+	topAlbumImg: String,
+	topTrack0: String,
+	topTrack3: String,
+	topTrack10: String,
 	image: String,
-	tags: [String]
+	description: String,
+	similar: [String],
+	tags: [String],
 })
+
 
 const Artist = new mongoose.model('Artist', artistSchema);
 

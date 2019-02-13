@@ -1,10 +1,11 @@
-const express = require ('express')
-const router	= express.Router()
+const express 	 = require ('express')
+const router		 = express.Router()
 const ArtistList = require('../models/artistList')
+const Artist 		 = require('../models/artist')
 
 const API_KEY = process.env.LASTFM_API_KEY
 
-// View List
+// View All Lists
 router.get('/', async (req, res) => {
 	try {
 		const foundLists = await ArtistList.find() // {userId: req.session.userId}
@@ -45,36 +46,41 @@ router.delete('/:listId', async (req, res) => {
 })
 
 // Add Artist to a List
-router.put('/:listId/:artistId', async (req, res) => {
+router.put('/:listId', async (req, res) => {
 	try {
-			// query api for artist
-		const responseInfo = await fetch(`http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&mbid=${req.params.artistId}&api_key=${API_KEY}&format=json`)
-		if (!responseInfo.ok) {
-			throw Error(response.statusText)
-		}
-		const parsedResponseInfo = await responseInfo.json()
-		console.log(parsedResponseInfo);
+		// 	// query api for artist
+		// const responseInfo = await fetch(`http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&mbid=${req.params.artistId}&api_key=${API_KEY}&format=json`)
+		// if (!responseInfo.ok) {
+		// 	throw Error(response.statusText)
+		// }
+		// const parsedResponseInfo = await responseInfo.json()
+		// console.log(parsedResponseInfo);
+
+		console.log(req.body);
 			
-			// search db for artist by that id
-		const foundArtist = await Artist.find({mbid: parsedResponseInfo.mbid})
+		// find list it's being added to
+		const foundList = await ArtistList.findOne({ _id: req.params.listId })
+			
+		// search db for artist by that id
+		console.log(req.body.mbid, 'artistId');
+		console.log(req.params.listId, 'listId');
+		const foundArtist = await Artist.findOne({mbid: req.body.mbid})
 
 			// if artists doesn't exist yet, create artist,
 		if (!foundArtist) {
 			const createdArtist = await Artist.create(req.body) //or something like that
-		} 
-
-			// find list it's being added to
-		const foundList = await Artistlist.findOne({ _id: req.params.listId })
-
+			
 			// push artist into that list
-		if (createdArtist) {
-			foundList.push(createdArtist)
+			foundList.artists.push(createdArtist)
+			await foundList.save()
+			//send response
 			res.json({
 				status: 200,
 				data: foundList
 			})
 		} else {
-			foundList.push(foundArtist)
+			foundList.artists.push(foundArtist)
+			await foundList.save()
 			res.json({
 				status: 200,
 				data: foundList
