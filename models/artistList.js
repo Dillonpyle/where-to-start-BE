@@ -4,7 +4,7 @@ const Artist   = require ('./artist')
 const artistListSchema = new mongoose.Schema({
 	user: String,
 	userId: String,
-	listName: String,
+	name: String,
 	artists: [Artist.schema]
 })
 

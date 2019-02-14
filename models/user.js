@@ -4,7 +4,7 @@ const ArtistList = require('./artistList')
 const userSchema = new mongoose.Schema({
 	username: String,
 	password: String,
-	artistlists: [ArtistList.schema],
+	artistLists: [ArtistList.schema],
 	photo: String,
 })
 

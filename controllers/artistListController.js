@@ -2,6 +2,7 @@ const express 	 = require ('express')
 const router		 = express.Router()
 const ArtistList = require('../models/artistList')
 const Artist 		 = require('../models/artist')
+const User 			 = require('../models/user')
 
 const API_KEY = process.env.LASTFM_API_KEY
 
@@ -21,11 +22,14 @@ router.get('/', async (req, res) => {
 // Create a new list
 router.post('/', async (req, res) => {
 	try {
-		console.log('this is req.body\n', req.body);
-
-
+		//console.log('this is req.body\n', req.body);
 
 		const createdList = await ArtistList.create(req.body);
+		const foundUser = await User.findById(req.body.userId);
+		//console.log(foundUser);
+		foundUser.artistLists.push(createdList)
+		await foundUser.save()
+		console.log(foundUser);
 
 
 
