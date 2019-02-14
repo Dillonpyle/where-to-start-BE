@@ -21,8 +21,14 @@ router.get('/', async (req, res) => {
 // Create a new list
 router.post('/', async (req, res) => {
 	try {
-		//console.log('this is req.body\n', req.body);
+		console.log('this is req.body\n', req.body);
+
+
+
 		const createdList = await ArtistList.create(req.body);
+
+
+
 		res.json({
       status: 200,
       data: createdList
