@@ -41,7 +41,7 @@ const artistController = require('./controllers/artistController')
 app.use('/api/v1/artist', artistController)
 
 const authController = require('./controllers/authController')
-app.use('/authentication', authController)
+app.use('/auth', authController)
 
 
 

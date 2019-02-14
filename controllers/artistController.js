@@ -21,21 +21,21 @@ router.post('/', async (req, res) => {
 		//console.log(req.body.searchArtist, 'this is req.body');
 
 		// get artist info
-		const responseInfo = await fetch(`http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=${req.body.searchArtist}&autocorrect=1&api_key=${API_KEY}&format=json`)
+		const responseInfo = await fetch(`http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=${req.body.artist}&autocorrect=1&api_key=${API_KEY}&format=json`)
 		if (!responseInfo.ok) {
 			throw Error(response.statusText)
 		}
 		const parsedResponseInfo = await responseInfo.json()
 
 		// get top tracks by artist
-		const responseTopTracks = await fetch(`http://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=${req.body.searchArtist}&autocorrect=1&api_key=${API_KEY}&limit=20&format=json`)
+		const responseTopTracks = await fetch(`http://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=${req.body.artist}&autocorrect=1&api_key=${API_KEY}&limit=20&format=json`)
 		if (!responseTopTracks.ok) {
 			throw Error(responseTopTracks.statusText)
 		}
 		const parsedResponseTopTracks = await responseTopTracks.json()
 
 		// get top albums by artist
-		const responseTopAlbums = await fetch(`http://ws.audioscrobbler.com/2.0/?method=artist.gettopalbums&artist=${req.body.searchArtist}&autocorrect=1&api_key=${API_KEY}&limit=5&format=json`)
+		const responseTopAlbums = await fetch(`http://ws.audioscrobbler.com/2.0/?method=artist.gettopalbums&artist=${req.body.artist}&autocorrect=1&api_key=${API_KEY}&limit=5&format=json`)
 		if (!responseTopAlbums.ok) {
 			throw Error(responseTopAlbums.statusText)
 		}
