@@ -4,26 +4,6 @@ const User		= require ('../models/user')
 const bcrypt  = require ('bcryptjs')
 
 
-
-// Login
-// router.post('/login', async (req, res) => {
-//   console.log(req.body, ' this is body of auth')
-//   try {
-//     const user = await User.create(req.body);
-//     req.session.logged = true;
-//     req.session.username = req.body.username;
-//     res.json({
-//       status: 200,
-//       data: 'login successful'
-//     });
-//     console.log(req.session, ' this is session');
-//   } catch(err){
-//     console.log(err);
-//     res.send(err);
-//   }
-// });
-
-
 // REGISTER
 router.post('/register', async (req, res) => {
 
@@ -38,7 +18,7 @@ router.post('/register', async (req, res) => {
 
   // create a user from the object
   const createdUser = await User.create(userDbEntry)
-  console.log(createdUser);
+  //console.log(createdUser);
   req.session.username = createdUser.username;
   req.session.loggedIn   = true;
 
@@ -59,14 +39,14 @@ router.post('/login', async (req, res) => {
         req.session.message  = '';
         req.session.username = req.body.username;
         req.session.loggedIn = true;
-        console.log(req.session)
+        //console.log(req.session)
         res.json({
           status: 200,
           data: foundUser,
           loggedIn: req.session.loggedIn
         })        
     } else {
-      console.log('else in bcrypt compare')
+      //console.log('else in bcrypt compare')
       req.session.message = 'Username or password are incorrect';
       req.session.loggedIn = false
       res.json({

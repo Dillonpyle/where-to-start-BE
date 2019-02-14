@@ -61,7 +61,21 @@ router.post('/new', async (req, res) => {
 // Delete a List
 router.delete('/:listId', async (req, res) => {
 	try {
+		// delete List by id
 		const deletedList = await ArtistList.findByIdAndRemove(req.params.listId)
+		//console.log(deletedList);
+
+		// Find user who made deletedList
+		const foundUser = await User.findById(deletedList.userId)
+		//console.log(foundUser);
+		
+		// splice the deleted list from the user's list array
+		const indexOfList = foundUser.artistLists.findIndex((list) => list._id === deletedList._id)
+		foundUser.artistLists.splice(indexOfList, 1)
+		await foundUser.save()
+		//console.log(foundUser);
+
+
 		res.json({
 			status: 200,
 			data: deletedList
