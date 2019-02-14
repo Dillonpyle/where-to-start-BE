@@ -100,14 +100,14 @@ router.put('/:listId/:artistId/delete', async (req, res) => {
 	try {
 		// Search DB for list Id
 		const foundList = await ArtistList.findOne({ _id: req.params.listId })
-		console.log('\nfoundList\n', foundList);
+		//console.log('\nfoundList\n', foundList);
 
 		// Find Artist by mbid in list's artist array
 		const indexOfArtist = foundList.artists.findIndex(artist => artist.mbid === req.params.artistId)
 
 		// splice Artist from that list 
 		foundList.artists.splice(indexOfArtist, 1)
-		console.log('\nfoundList.artists\n', foundList.artists);
+		//console.log('\nfoundList.artists\n', foundList.artists);
 		await foundList.save()
 
 		// return updated list

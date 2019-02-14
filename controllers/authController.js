@@ -52,14 +52,14 @@ router.post('/register', async (req, res) => {
 // LOGIN
 router.post('/login', async (req, res) => {
   const foundUser = await User.findOne({username: req.body.username})
-  console.log(foundUser);
+  //console.log(foundUser);
   if(foundUser){
      //now compare hash with the password from the form
     if(bcrypt.compareSync(req.body.password, foundUser.password)){
         req.session.message  = '';
         req.session.username = req.body.username;
         req.session.loggedIn = true;
-        console.log(req.session, req.body)
+        console.log(req.session)
         res.json({
           status: 200,
           data: foundUser,
@@ -90,8 +90,18 @@ router.post('/login', async (req, res) => {
 
 // LOGOUT
 router.get('/logout', async (req, res) => {
-  await req.session.destroy((err))
-  res.json
+  try {
+    await req.session.destroy()
+    res.json({
+      status: 200,
+      data: null,
+      loggedIn: false,
+      message: 'User has logged out'
+    })
+    
+  } catch (err) {
+    console.log(err)
+  }
 })
 
 
