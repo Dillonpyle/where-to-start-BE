@@ -22,7 +22,7 @@ const API_KEY = process.env.LASTFM_API_KEY
 // View User's Lists
 router.post('/', async (req, res) => {
 	try {
-		console.log(req.body);
+		//console.log(req.body);
 		const foundLists = await ArtistList.find({userId: req.body.userId}) // {userId: req.session.userId}
 		//const foundUser = await User.findById({})
 
@@ -166,7 +166,7 @@ router.put('/:listId/:artistId/delete', async (req, res) => {
 		// Search DB for list Id
 		const foundList = await ArtistList.findOne({ _id: req.params.listId })
 		const foundUser = await User.findById(foundList.userId)
-		console.log('\nfoundUser before Update\n',foundUser.artistLists);
+		//console.log('\nfoundUser before Update\n',foundUser.artistLists);
 		//console.log('\nfoundList\n', foundList);
 
 		// Find Artist by mbid in list's artist array
@@ -185,7 +185,7 @@ router.put('/:listId/:artistId/delete', async (req, res) => {
 		// push in updated list into users list array
 		foundUser.artistLists.push(foundList)
 		await foundUser.save()
-		console.log('\nfoundUser after Update\n',foundUser.artistLists);
+		//console.log('\nfoundUser after Update\n',foundUser.artistLists);
 
 		// return updated list
 		res.json({

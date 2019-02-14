@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const connectionString = 'mongodb://localhost/where-to-start'
+const connectionString = process.env.MONGODB_URI//'mongodb://localhost/where-to-start'
 
 
 mongoose.connect(connectionString, {
