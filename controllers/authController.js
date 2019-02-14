@@ -7,26 +7,39 @@ const bcrypt  = require ('bcryptjs')
 // REGISTER
 router.post('/register', async (req, res) => {
 
-  // hash the password
-  const password = req.body.password;
-  const passwordHash = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+  // check for duplicate users
+  const foundUser = await User.findOne({username: req.body.username})
+  if (foundUser) {
+    req.session.message = 'Username is unavailable';
+    req.session.loggedIn = false
+    res.json({
+      status: 200,
+      data: null,
+      loggedIn: req.session.loggedIn,
+      message: req.session.message
+    })
+  } else {
+    // hash the password
+    const password = req.body.password;
+    const passwordHash = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
-  // lets create a object for our db entry;
-  const userDbEntry = {};
-  userDbEntry.username = req.body.username;
-  userDbEntry.password = passwordHash
+    // lets create a object for our db entry;
+    const userDbEntry = {};
+    userDbEntry.username = req.body.username;
+    userDbEntry.password = passwordHash
 
-  // create a user from the object
-  const createdUser = await User.create(userDbEntry)
-  //console.log(createdUser);
-  req.session.username = createdUser.username;
-  req.session.loggedIn   = true;
+    // create a user from the object
+    const createdUser = await User.create(userDbEntry)
+    //console.log(createdUser);
+    req.session.username = createdUser.username;
+    req.session.loggedIn   = true;
 
-  res.json({
-    status: 200,
-    data: createdUser,
-    loggedIn: req.session.loggedIn
-  })
+    res.json({
+      status: 200,
+      data: createdUser,
+      loggedIn: req.session.loggedIn
+    })
+  }
 })
 
 // LOGIN
