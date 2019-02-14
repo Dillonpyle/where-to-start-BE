@@ -7,9 +7,25 @@ const User 			 = require('../models/user')
 const API_KEY = process.env.LASTFM_API_KEY
 
 // View All Lists
-router.get('/', async (req, res) => {
+// router.get('/', async (req, res) => {
+// 	try {
+// 		const foundLists = await ArtistList.find() // {userId: req.session.userId}
+// 		res.json({
+//       status: 200,
+//       data: foundLists
+//     });
+// 	} catch (err) {
+// 		console.log(err)
+// 	}
+// })
+
+// View User's Lists
+router.post('/', async (req, res) => {
 	try {
-		const foundLists = await ArtistList.find() // {userId: req.session.userId}
+		console.log(req.body);
+		const foundLists = await ArtistList.find({userId: req.body.userId}) // {userId: req.session.userId}
+		//const foundUser = await User.findById({})
+
 		res.json({
       status: 200,
       data: foundLists
@@ -20,7 +36,7 @@ router.get('/', async (req, res) => {
 })
 
 // Create a new list
-router.post('/', async (req, res) => {
+router.post('/new', async (req, res) => {
 	try {
 		//console.log('this is req.body\n', req.body);
 
