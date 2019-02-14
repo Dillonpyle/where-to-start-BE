@@ -45,7 +45,7 @@ router.post('/new', async (req, res) => {
 		//console.log(foundUser);
 		foundUser.artistLists.push(createdList)
 		await foundUser.save()
-		console.log(foundUser);
+		//console.log(foundUser);
 
 
 
@@ -61,6 +61,7 @@ router.post('/new', async (req, res) => {
 // Delete a List
 router.delete('/:listId', async (req, res) => {
 	try {
+
 		// delete List by id
 		const deletedList = await ArtistList.findByIdAndRemove(req.params.listId)
 		//console.log(deletedList);
@@ -74,7 +75,6 @@ router.delete('/:listId', async (req, res) => {
 		foundUser.artistLists.splice(indexOfList, 1)
 		await foundUser.save()
 		//console.log(foundUser);
-
 
 		res.json({
 			status: 200,
@@ -90,6 +90,8 @@ router.put('/:listId', async (req, res) => {
 	try {		
 		// find list it's being added to
 		const foundList = await ArtistList.findOne({ _id: req.params.listId })
+		const foundUser = await User.findById(foundList.userId)
+		//console.log('\nfoundUser before Update\n',foundUser.artistLists);
 			
 		// search db for artist by that id
 		const foundArtist = await Artist.findOne({mbid: req.body.mbid})
@@ -106,6 +108,18 @@ router.put('/:listId', async (req, res) => {
 				// push artist into that list
 				foundList.artists.push(createdArtist)
 				await foundList.save()
+
+				// delete old list from users list array
+				const indexOfList = foundUser.artistLists.findIndex((list) => list._id === foundList._id)
+				foundUser.artistLists.splice(indexOfList, 1)
+				await foundUser.save()
+
+				// push in updated list into users list array
+				foundUser.artistLists.push(foundList)
+				await foundUser.save()
+				//console.log('\nfoundUser after Update\n',foundUser.artistLists);
+
+
 				//send response
 				res.json({
 					status: 200,
@@ -124,6 +138,17 @@ router.put('/:listId', async (req, res) => {
 				// push artist into list if no duplicates found
 				foundList.artists.push(foundArtist)
 				await foundList.save()
+
+				// delete old list from users list array
+				const indexOfList = foundUser.artistLists.findIndex((list) => list._id === foundList._id)
+				foundUser.artistLists.splice(indexOfList, 1)
+				await foundUser.save()
+
+				// push in updated list into users list array
+				foundUser.artistLists.push(foundList)
+				await foundUser.save()
+				//console.log('\nfoundUser after Update\n',foundUser.artistLists);
+
 				res.json({
 					status: 200,
 					data: foundList
@@ -140,6 +165,8 @@ router.put('/:listId/:artistId/delete', async (req, res) => {
 	try {
 		// Search DB for list Id
 		const foundList = await ArtistList.findOne({ _id: req.params.listId })
+		const foundUser = await User.findById(foundList.userId)
+		console.log('\nfoundUser before Update\n',foundUser.artistLists);
 		//console.log('\nfoundList\n', foundList);
 
 		// Find Artist by mbid in list's artist array
@@ -149,6 +176,16 @@ router.put('/:listId/:artistId/delete', async (req, res) => {
 		foundList.artists.splice(indexOfArtist, 1)
 		//console.log('\nfoundList.artists\n', foundList.artists);
 		await foundList.save()
+
+		// delete old list from users list array
+		const indexOfList = foundUser.artistLists.findIndex((list) => list._id === foundList._id)
+		foundUser.artistLists.splice(indexOfList, 1)
+		await foundUser.save()
+
+		// push in updated list into users list array
+		foundUser.artistLists.push(foundList)
+		await foundUser.save()
+		console.log('\nfoundUser after Update\n',foundUser.artistLists);
 
 		// return updated list
 		res.json({
