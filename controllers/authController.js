@@ -23,14 +23,14 @@ router.post('/register', async (req, res) => {
     const password = req.body.password;
     const passwordHash = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
-    // lets create a object for our db entry;
+    // create an object for db entry
     const userDbEntry = {};
     userDbEntry.username = req.body.username;
     userDbEntry.password = passwordHash
 
     // create a user from the object
     const createdUser = await User.create(userDbEntry)
-    //console.log(createdUser);
+
     req.session.username = createdUser.username;
     req.session.loggedIn   = true;
 
@@ -45,21 +45,21 @@ router.post('/register', async (req, res) => {
 // LOGIN
 router.post('/login', async (req, res) => {
   const foundUser = await User.findOne({username: req.body.username})
-  //console.log(foundUser);
+
   if(foundUser){
-     //now compare hash with the password from the form
+     // compare hash with the password from the form
     if(bcrypt.compareSync(req.body.password, foundUser.password)){
         req.session.message  = '';
         req.session.username = req.body.username;
         req.session.loggedIn = true;
-        //console.log(req.session)
+
         res.json({
           status: 200,
           data: foundUser,
           loggedIn: req.session.loggedIn
         })        
     } else {
-      //console.log('else in bcrypt compare')
+
       req.session.message = 'Username or password are incorrect';
       req.session.loggedIn = false
       res.json({
@@ -96,9 +96,6 @@ router.get('/logout', async (req, res) => {
     console.log(err)
   }
 })
-
-
-
 
 // View User's Page
 

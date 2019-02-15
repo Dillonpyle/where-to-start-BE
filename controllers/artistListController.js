@@ -6,23 +6,9 @@ const User 			 = require('../models/user')
 
 const API_KEY = process.env.LASTFM_API_KEY
 
-// View All Lists
-// router.get('/', async (req, res) => {
-// 	try {
-// 		const foundLists = await ArtistList.find() // {userId: req.session.userId}
-// 		res.json({
-//       status: 200,
-//       data: foundLists
-//     });
-// 	} catch (err) {
-// 		console.log(err)
-// 	}
-// })
-
 // View User's Lists
 router.post('/', async (req, res) => {
 	try {
-		//console.log(req.body);
 		const foundLists = await ArtistList.find({userId: req.body.userId}) // {userId: req.session.userId}
 		//const foundUser = await User.findById({})
 
@@ -38,14 +24,12 @@ router.post('/', async (req, res) => {
 // Create a new list
 router.post('/new', async (req, res) => {
 	try {
-		//console.log('this is req.body\n', req.body);
 
 		const createdList = await ArtistList.create(req.body);
 		const foundUser = await User.findById(req.body.userId);
-		//console.log(foundUser);
+
 		foundUser.artistLists.push(createdList)
 		await foundUser.save()
-		//console.log(foundUser);
 
 
 
@@ -64,17 +48,14 @@ router.delete('/:listId', async (req, res) => {
 
 		// delete List by id
 		const deletedList = await ArtistList.findByIdAndRemove(req.params.listId)
-		//console.log(deletedList);
 
 		// Find user who made deletedList
 		const foundUser = await User.findById(deletedList.userId)
-		//console.log(foundUser);
 		
 		// splice the deleted list from the user's list array
 		const indexOfList = foundUser.artistLists.findIndex((list) => list._id === deletedList._id)
 		foundUser.artistLists.splice(indexOfList, 1)
 		await foundUser.save()
-		//console.log(foundUser);
 
 		res.json({
 			status: 200,
@@ -91,19 +72,15 @@ router.put('/:listId', async (req, res) => {
 		// find list it's being added to
 		const foundList = await ArtistList.findOne({ _id: req.params.listId })
 		const foundUser = await User.findById(foundList.userId)
-		//console.log('\nfoundUser before Update\n',foundUser.artistLists);
 			
 		// search db for artist by that id
 		const foundArtist = await Artist.findOne({mbid: req.body.mbid})
 
 		// if foundList already has artist of artist.name, don't add
-		// console.log('foundArtist\n', foundArtist );
-		// console.log('foundList\n', foundList);
 
 			// if artists doesn't exist yet, create artist,
 		if (!foundArtist) {
 			const createdArtist = await Artist.create(req.body) //or something like that
-			//console.log('createdArtist\n', createdArtist);
 
 				// push artist into that list
 				foundList.artists.push(createdArtist)
@@ -117,7 +94,6 @@ router.put('/:listId', async (req, res) => {
 				// push in updated list into users list array
 				foundUser.artistLists.push(foundList)
 				await foundUser.save()
-				//console.log('\nfoundUser after Update\n',foundUser.artistLists);
 
 
 				//send response
@@ -147,7 +123,6 @@ router.put('/:listId', async (req, res) => {
 				// push in updated list into users list array
 				foundUser.artistLists.push(foundList)
 				await foundUser.save()
-				//console.log('\nfoundUser after Update\n',foundUser.artistLists);
 
 				res.json({
 					status: 200,
@@ -166,15 +141,13 @@ router.put('/:listId/:artistId/delete', async (req, res) => {
 		// Search DB for list Id
 		const foundList = await ArtistList.findOne({ _id: req.params.listId })
 		const foundUser = await User.findById(foundList.userId)
-		//console.log('\nfoundUser before Update\n',foundUser.artistLists);
-		//console.log('\nfoundList\n', foundList);
 
 		// Find Artist by mbid in list's artist array
 		const indexOfArtist = foundList.artists.findIndex(artist => artist.mbid === req.params.artistId)
 
 		// splice Artist from that list 
 		foundList.artists.splice(indexOfArtist, 1)
-		//console.log('\nfoundList.artists\n', foundList.artists);
+
 		await foundList.save()
 
 		// delete old list from users list array
@@ -185,7 +158,6 @@ router.put('/:listId/:artistId/delete', async (req, res) => {
 		// push in updated list into users list array
 		foundUser.artistLists.push(foundList)
 		await foundUser.save()
-		//console.log('\nfoundUser after Update\n',foundUser.artistLists);
 
 		// return updated list
 		res.json({
@@ -211,15 +183,7 @@ router.put('/:listId', async (req, res) => {
 	}
 })
 
-		// probably don't need this
-		
-		// 	// query api for artist
-		// const responseInfo = await fetch(`http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&mbid=${req.params.artistId}&api_key=${API_KEY}&format=json`)
-		// if (!responseInfo.ok) {
-		// 	throw Error(response.statusText)
-		// }
-		// const parsedResponseInfo = await responseInfo.json()
-		// console.log(parsedResponseInfo);
+
 
 
 
